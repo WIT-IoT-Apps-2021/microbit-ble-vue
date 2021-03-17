@@ -20,7 +20,12 @@ export default {
         isConnected: false,
         device: null,
         accelerometerDataCharacteristic: null,
-        accelerometerPeriodCharacteristic: null
+        accelerometerPeriodCharacteristic: null,
+        accelerometer: {
+          x: 0,
+          y: 0,
+          z: 0
+        }
       },
       microbitUuid: {
         /**
@@ -79,12 +84,12 @@ export default {
   },
   methods: {
     accelerometerDataChanged(event) {
-      let accX = event.target.value.getInt16(0, true); // Little Endian
-      let accY = event.target.value.getInt16(2, true); // Little Endian
-      let accZ = event.target.value.getInt16(4, true); // Little Endian
+      this.microbit.accelerometer.x = event.target.value.getInt16(0, true); // Little Endian
+      this.microbit.accelerometer.y = event.target.value.getInt16(2, true); // Little Endian
+      this.microbit.accelerometer.z = event.target.value.getInt16(4, true); // Little Endian
 
-      console.log({ x: accX, y: accY, z: accZ });
-      this.playSound(accX, accY, accZ);
+      console.log({ x: this.microbit.accelerometer.x, y: this.microbit.accelerometer.y, z: this.microbit.accelerometer.z });
+      this.playSound(this.microbit.accelerometer.x);
     },
     async connectMicrobit() {
       console.log('Requesting micro:bit Bluetooth devices... ', false);
@@ -161,15 +166,15 @@ export default {
           });
       }
     },
-    playSound(x = 0, y = 0, z = 0) {
+    playSound(x = 0) {
       var osc = new Tone.OmniOscillator().toDestination();
       osc.frequency.value = Math.abs(264 + x);
       osc.volume.value = -60;
-      Tone.Transport.bpm.value = 60 + y;
-      var duration = Math.abs(0.1 + z / 100);
+      Tone.Transport.bpm.value = 60;
+      var duration = 100;
       osc.start().stop('+' + duration);
     },
-    disconnect() {
+    disconnectMicrobit() {
       console.log('Disconnecting... ');
       if (!this.microbit.device) {
         console.error('There is no device connected.');
