@@ -1,27 +1,59 @@
 <template>
   <h2>Connection</h2>
-  <div class="btn-group" role="group" aria-label="micro:bit controlls">
+  <div class="btn-group d-grid gap-2" role="group" aria-label="micro:bit controlls">
     <button v-if="!microbit.isConnected" type="button" class="btn btn-success" @click="connectMicrobit()">Connect to micro:bit</button>
     <button v-if="microbit.isConnected" type="button" class="btn btn-danger" @click="disconnectMicrobit()">Disconnect</button>
-    <button type="button" class="btn btn-primary" @click="playSound()">Play sound</button>
   </div>
-  <p>microbit: {{ microbit }}</p>
+  <div id="microbit-info" v-if="this.microbit.isConnected">
+    <h3>Accelerometer</h3>
+    <p>
+      Raw Data:
+      <br />
+      {{ microbit.accelerometer }}
+    </p>
+    <div class="progress my-2">
+      <div class="progress-bar" role="progressbar" :style="'width: ' + xPercent + '%'" :aria-valuenow="xPercent" aria-valuemin="0" aria-valuemax="100">
+        x: {{ this.microbit.accelerometer.x }}
+      </div>
+    </div>
+    <div class="progress my-2">
+      <div class="progress-bar" role="progressbar" :style="'width: ' + yPercent + '%'" :aria-valuenow="yPercent" aria-valuemin="0" aria-valuemax="100">
+        y: {{ this.microbit.accelerometer.y }}
+      </div>
+    </div>
+    <div class="progress my-2">
+      <div class="progress-bar" role="progressbar" :style="'width: ' + zPercent + '%'" :aria-valuenow="zPercent" aria-valuemin="0" aria-valuemax="100">
+        z: {{ this.microbit.accelerometer.z }}
+      </div>
+    </div>
+
+    <h3>Audio</h3>
+    <audio controls id="audio" loop autoplay>
+      <source src="https://ia802707.us.archive.org/25/items/win3.0midi/PASSPORT.ogg" type="audio/ogg" />
+      Not supported
+    </audio>
+    <p>Playback Rate: {{ playbackRate }}</p>
+    <p>Adjusted Rate: {{ adjustedPlaybackRate }}</p>
+  </div>
 </template>
 
 <script>
-// import { requestMicrobit, getServices } from 'microbit-web-bluetooth';
 import * as Tone from 'tone';
 
 export default {
   name: 'Microbit',
   data() {
     return {
+      xPercent: 50,
+      yPercent: 50,
+      zPercent: 50,
       microbit: {
         isConnected: false,
         device: null,
         accelerometerDataCharacteristic: null,
         accelerometerPeriodCharacteristic: null,
         accelerometer: {
+          count: 0,
           x: 0,
           y: 0,
           z: 0
@@ -89,16 +121,44 @@ export default {
       this.microbit.accelerometer.z = event.target.value.getInt16(4, true); // Little Endian
 
       console.log({ x: this.microbit.accelerometer.x, y: this.microbit.accelerometer.y, z: this.microbit.accelerometer.z });
-      this.playSound(this.microbit.accelerometer.x);
+
+      if (this.microbit.accelerometer.count == 0) {
+        this.microbit.accelerometer.count = 50;
+      } else {
+        this.microbit.accelerometer.count--;
+      }
+
+      let audio = document.getElementById('audio');
+
+      // switch(M)
+
+      if (this.microbit.accelerometer.count == 0) {
+        this.playbackRate = Math.abs(this.microbit.accelerometer.y / 2048);
+
+        if (this.playbackRate <= 0.25) {
+          this.adjustedPlaybackRate = 0.25;
+        } else if (this.playbackRate >= 0.48 && this.playbackRate < 0.8) {
+          this.adjustedPlaybackRate = 1.0;
+        } else if (this.playbackRate >= 0.8) {
+          this.adjustedPlaybackRate = 1.5;
+        } else {
+          this.adjustedPlaybackRate = this.playbackRate;
+        }
+        audio.playbackRate = this.adjustedPlaybackRate;
+      }
+
+      // Progress Bars
+      this.xPercent = ((this.microbit.accelerometer.x + 2048) / 4096) * 100;
+      this.yPercent = ((this.microbit.accelerometer.y + 2048) / 4096) * 100;
+      this.zPercent = ((this.microbit.accelerometer.z + 2048) / 4096) * 100;
     },
     async connectMicrobit() {
       console.log('Requesting micro:bit Bluetooth devices... ', false);
       if (!navigator.bluetooth) {
-        console.error('Bluetooth not available in this browser or computer.');
+        console.error('Bluetooth adapter not available');
       } else {
         navigator.bluetooth
           .requestDevice({
-            // To accept all devices, use acceptAllDevices: true and remove filters.
             filters: [{ namePrefix: 'BBC micro:bit' }],
             optionalServices: [
               this.microbitUuid.genericAccess[0],
@@ -165,14 +225,6 @@ export default {
             console.error(error);
           });
       }
-    },
-    playSound(x = 0) {
-      var osc = new Tone.OmniOscillator().toDestination();
-      osc.frequency.value = Math.abs(264 + x);
-      osc.volume.value = -60;
-      Tone.Transport.bpm.value = 60;
-      var duration = 100;
-      osc.start().stop('+' + duration);
     },
     disconnectMicrobit() {
       console.log('Disconnecting... ');
