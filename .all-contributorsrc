@@ -1,0 +1,62 @@
+{
+  "projectName": "microbit-ble-vue",
+  "projectOwner": "DylanGore",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "gitmoji",
+  "contributors": [
+    {
+      "login": "DylanGore",
+      "name": "Dylan Gore",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2760449?v=4",
+      "profile": "https://github.com/DylanGore",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "JackP2112",
+      "name": "Jack Power",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35736615?v=4",
+      "profile": "https://github.com/JackP2112",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "aaccttrr",
+      "name": "Adam Cotter",
+      "avatar_url": "https://avatars.githubusercontent.com/u/34109635?v=4",
+      "profile": "https://github.com/aaccttrr",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "maxlkin",
+      "name": "Max Larkin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16273613?v=4",
+      "profile": "https://github.com/maxlkin",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "robert-solomon12",
+      "name": "Robert Solomon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35696882?v=4",
+      "profile": "https://github.com/robert-solomon12",
+      "contributions": [
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=for-the-badge)](#contributors)"
+}
