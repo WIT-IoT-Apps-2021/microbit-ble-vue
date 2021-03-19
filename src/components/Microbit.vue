@@ -4,9 +4,15 @@
   <!-- Connection buttons -->
   <div class="btn-group d-grid gap-2" role="group" aria-label="micro:bit controlls">
     <!-- Display only if the microbit is NOT already connected -->
-    <button v-if="!microbit.isConnected" type="button" class="btn btn-success" @click="connectMicrobit()">Connect to micro:bit</button>
+    <button v-if="!microbit.isConnected" type="button" class="btn btn-success" @click="connectMicrobit()">
+      <span class="iconify" data-icon="mdi:bluetooth-connect" data-inline="true"></span>
+      Connect to micro:bit
+    </button>
     <!-- Display only when the micro:bit IS already connected -->
-    <button v-if="microbit.isConnected" type="button" class="btn btn-danger" @click="disconnectMicrobit()">Disconnect</button>
+    <button v-if="microbit.isConnected" type="button" class="btn btn-danger" @click="disconnectMicrobit()">
+      <span class="iconify" data-icon="mdi:bluetooth-off" data-inline="true"></span>
+      Disconnect
+    </button>
   </div>
 
   <!-- Only display this entire block if there is a micro:bit connected -->
