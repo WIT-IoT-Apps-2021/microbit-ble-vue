@@ -118,7 +118,14 @@ Don't forget to flash the micro:bit with firmware that enables the required Blue
 
 ### Connecting the micro:bit to a desktop/laptop
 
-You may have to enable a flag in the browser to allow Web Bluetooth connections on desktop. To do this go to the flags page ([Google Chrome/Chromium](chrome://flags/#enable-experimental-web-platform-features), [Microsoft Edge](edge://flags/#enable-experimental-web-platform-features)), enable the `Experimental Web Platform Features` flag and re-launch the browser.
+You may have to enable a flag in the browser to allow Web Bluetooth connections on desktop. To do this go to the flags page, enable the `Experimental Web Platform Features` flag and re-launch the browser.
+
+#### Browser Flags (Experiments) Page Locations
+
+Enter the URL below in the address bar of your preferred browser to access the flags (Experiments) page
+
+- Google Chrome/Chromium: `chrome://flags/#enable-experimental-web-platform-features`
+- Microsoft Edge: `edge://flags/#enable-experimental-web-platform-features`
 
 ## Useful Tools
 
