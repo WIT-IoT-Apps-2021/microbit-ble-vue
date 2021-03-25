@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  microbit-ble-vue:
+    image: ghcr.io/wit-iot-apps-2021/microbit-ble-vue:latest
+    container_name: microbit-ble-vue
+    build:
+      context: .
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - 8080:80
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
