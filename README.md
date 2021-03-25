@@ -116,7 +116,11 @@ This will provide you with a HTTP and HTTPS URL that you can use to access you'r
 
 Don't forget to flash the micro:bit with firmware that enables the required Bluetooth services. See the [microbit](/microbit) folder for more details.
 
-### Useful Tools
+### Connecting the micro:bit to a desktop/laptop
+
+You may have to enable a flag in the browser to allow Web Bluetooth connections on desktop. To do this go to the flags page ([Google Chrome/Chromium](chrome://flags/#enable-experimental-web-platform-features), [Microsoft Edge](edge://flags/#enable-experimental-web-platform-features)), enable the `Experimental Web Platform Features` flag and re-launch the browser.
+
+## Useful Tools
 
 Some tools that you may find useful
 
