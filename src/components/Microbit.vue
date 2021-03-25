@@ -1,18 +1,27 @@
 <template>
   <h2>Connection</h2>
 
-  <!-- Connection buttons -->
-  <div class="btn-group d-grid gap-2" role="group" aria-label="micro:bit controlls">
-    <!-- Display only if the microbit is NOT already connected -->
-    <button v-if="!microbit.isConnected" type="button" class="btn btn-success" @click="connectMicrobit()">
-      <span class="iconify" data-icon="mdi:bluetooth-connect" data-inline="true"></span>
-      Connect to micro:bit
-    </button>
-    <!-- Display only when the micro:bit IS already connected -->
-    <button v-if="microbit.isConnected" type="button" class="btn btn-danger" @click="disconnectMicrobit()">
-      <span class="iconify" data-icon="mdi:bluetooth-off" data-inline="true"></span>
-      Disconnect
-    </button>
+  <div v-if="!loading">
+    <!-- Connection buttons -->
+    <div v-if="bluetoothAvailable" class="btn-group d-grid gap-2" role="group" aria-label="micro:bit controlls">
+      <!-- Display only if the microbit is NOT already connected -->
+      <button v-if="!microbit.isConnected" type="button" class="btn btn-success" @click="connectMicrobit()">
+        <span class="iconify" data-icon="mdi:bluetooth-connect" data-inline="true"></span>
+        Connect to micro:bit
+      </button>
+      <!-- Display only when the micro:bit IS already connected -->
+      <button v-if="microbit.isConnected" type="button" class="btn btn-danger" @click="disconnectMicrobit()">
+        <span class="iconify" data-icon="mdi:bluetooth-off" data-inline="true"></span>
+        Disconnect
+      </button>
+    </div>
+
+    <div v-else class="alert alert-danger" role="alert">Bluetooth adapter not available.</div>
+  </div>
+
+  <!-- Loading spinner -->
+  <div v-else class="spinner-grow text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
   </div>
 
   <!-- Only display this entire block if there is a micro:bit connected -->
@@ -60,6 +69,8 @@ export default {
   name: 'Microbit',
   data() {
     return {
+      loading: true,
+      bluetoothAvailable: false,
       playbackRate: 1.0,
       adjustedPlaybackRate: 1.0,
       xPercent: 50,
@@ -131,6 +142,29 @@ export default {
         rxCharacteristic: ['6e400003-b5a3-f393-e0a9-e50e24dcca9e', 'Rx Characteristic']
       }
     };
+  },
+  // Runs when the component is loaded
+  mounted: function () {
+    /**
+     * If the bluetooth obiect is undefined or the bluetooth adapter is present but
+     * is unavailable, update a variable with the availability.
+     * A loading spinner is used to cover this check until it is done to stop the UI changing quickly
+     * as the adapter is dicsovered.
+     */
+    if (typeof navigator.bluetooth !== 'undefined') {
+      navigator.bluetooth
+        .getAvailability()
+        .then((available) => {
+          if (available) this.bluetoothAvailable = true;
+          else this.bluetoothAvailable = false;
+        })
+        .then(() => {
+          this.loading = false;
+        });
+    } else {
+      this.bluetoothAvailable = false;
+      this.loading = false;
+    }
   },
   methods: {
     /**
