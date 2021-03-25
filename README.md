@@ -3,7 +3,7 @@
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=for-the-badge)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=for-the-badge)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
@@ -12,13 +12,15 @@
 [![Node](https://img.shields.io/badge/Node-v14%20LTS-%23339933?style=for-the-badge&logo=node.js)](#requirements)
 [![Vue](https://img.shields.io/badge/Vue-3-%234FC08D?style=for-the-badge&logo=vue.js)](https://v3.vuejs.org/)
 
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/WIT-IoT-Apps-2021/microbit-ble-vue/build?style=for-the-badge)](https://github.com/WIT-IoT-Apps-2021/microbit-ble-vue/actions/workflows/build-docker.yml)
+
 A Vue.JS web app that communicates with a [micro:bit](https://microbit.org/) using Bluetooth Low Energy (BLE) and the [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API).
 
 ## Requirements
 
 - Node v14 (Current LTS)
 - A device that supports Bluetooth Low Energy (BLE)
-- A Chromium-based browser is required for Web Bluetooth support [see here](https://caniuse.com/?search=Web%20Bluetooth)
+- A Chromium-based browser is required for Web Bluetooth support see ([here](https://caniuse.com/web-bluetooth))
 
 ## Development
 
@@ -40,13 +42,55 @@ This will expose a development server on your local network (usually on port 808
 
 ### Windows-specific Issues
 
-If you encounter an error relating to `node-gyp` on Windows, you may needs to install some additional dependencies [(see here)](https://github.com/nodejs/node-gyp#on-windows). One of the easiest ways to do this is to install `windows-build-tools` with NPM (administrator privileges may be required).
+If you encounter an error relating to `node-gyp` on Windows, you may needs to install some additional dependencies ([see here](https://github.com/nodejs/node-gyp#on-windows)). One of the easiest ways to do this is to install `windows-build-tools` with NPM (administrator privileges may be required).
 
 ```bash
 npm install -g windows-build-tools
 ```
 
 **Note:** This will install Python 2 along with some Visual Studio C++ build tools on your system.
+
+## Running
+
+There are multiple ways that this app can be run, the three options described below will expose a server on port 8080 over plain HTTP. Remember that HTTPS is required to use Web Bluetooth (see [ngrok](#ngrok) section).
+
+### Option 1 - NPM
+
+If you have the code cloned locally, you can run the development server by running:
+
+```bash
+npm run serve
+```
+
+### Option 2 - Docker
+
+The web app can alternatively be run using Docker. To do this run:
+
+```bash
+docker run -it --rm -d -p 8080:80 --name microbit-ble-vue ghcr.io/wit-iot-apps-2021/microbit-ble-vue:latest
+```
+
+### Option 3 - Docker Compose
+
+```yaml
+version: '3.8'
+
+services:
+  microbit-ble-vue:
+    image: ghcr.io/wit-iot-apps-2021/microbit-ble-vue:latest
+    container_name: microbit-ble-vue
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - 8080:80
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+```
+
+To run using docker-compose, save the above as docker-compose.yml and run `docker-compose up -d` to bring up the container and `docker-compose down` to bring the container down when it is no longer needed
 
 ### Ngrok
 
