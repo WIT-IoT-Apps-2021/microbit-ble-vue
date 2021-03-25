@@ -19,5 +19,5 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          repository: WIT-IoT-Apps-2021/microbit-ble-vue
+          repository: wit-iot-apps-2021/microbit-ble-vue
           tags: latest
