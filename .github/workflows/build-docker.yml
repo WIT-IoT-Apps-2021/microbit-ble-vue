@@ -1,0 +1,23 @@
+name: 'build'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: 'Build & Publish Docker Image to GHCR'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Code from GitHub'
+        uses: actions/checkout@v2
+      - name: 'Build Docker Image'
+        uses: docker/build-push-action@v1
+        with:
+          registry: ghcr.io
+          username: 'WIT-IoT-Apps-2021'
+          password: ${{ secrets.GITHUB_TOKEN }}
+          repository: WIT-IoT-Apps-2021/microbit-ble-vue
+          tags: latest
